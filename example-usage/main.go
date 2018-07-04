@@ -19,10 +19,9 @@ func main() {
 	})
 
 	targetPath := "static-content/myfile.jpg"
-	status, err := varnishAPI.InvalidatePath(targetPath)
-	if err != nil {
+	if err := varnishAPI.InvalidatePath(targetPath); err != nil {
 		logrus.Fatalf("error invalidating url: %s [url: %s]", err, targetPath)
 	}
 
-	logrus.Infof("succesfully purged URL [%d]", status)
+	logrus.Info("succesfully purged URL...")
 }

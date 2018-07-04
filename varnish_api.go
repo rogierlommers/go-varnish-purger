@@ -12,7 +12,7 @@ const defaultHTTPTimeout = 10
 // Invalidator is the API to varnish
 type Invalidator struct {
 	hostname  string
-	port      int
+	port      int64
 	protocol  string
 	debug     bool
 	keepAlive bool
@@ -21,7 +21,7 @@ type Invalidator struct {
 	beforeRequestFunc func(*http.Request)
 }
 
-func NewInvalidator(varnishAddress string, port int, keepAlive bool) (*Invalidator, error) {
+func NewInvalidator(varnishAddress string, port int64, keepAlive bool) (*Invalidator, error) {
 
 	addr, err := url.Parse(varnishAddress)
 	if err != nil {
