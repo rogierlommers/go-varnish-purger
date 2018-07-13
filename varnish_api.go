@@ -48,3 +48,8 @@ func NewInvalidator(varnishAddress string, port int64, keepAlive bool) (*Invalid
 func (i *Invalidator) BeforeRequest(f func(*http.Request)) {
 	i.beforeRequestFunc = f
 }
+
+// GetHostname can be used to retrieve the varnish cache hostname
+func (i *Invalidator) GetHostname() string {
+	return i.hostname
+}
