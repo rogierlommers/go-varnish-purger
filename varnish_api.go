@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/hashicorp/go-retryablehttp"
 )
 
 const defaultHTTPTimeout = 10
@@ -41,6 +43,18 @@ func NewInvalidator(varnishAddress string, port int64, keepAlive bool) (*Invalid
 	}
 
 	return &invalidator, nil
+}
+
+// SetRetryConfig can be used to inject a retry configuration to the http client
+// The retry policy is exponential backoff
+func (i *Invalidator) SetRetryConfig(retryWaitMin time.Duration, retryMax int) {
+	retryClient := retryablehttp.NewClient()
+	retryClient.HTTPClient.Timeout = defaultHTTPTimeout * time.Second
+
+	retryClient.RetryWaitMin = retryWaitMin
+	retryClient.RetryMax = retryMax
+
+	i.httpClient = retryClient.StandardClient()
 }
 
 // BeforeRequest can be used to inject behavior before sending a request to the client
