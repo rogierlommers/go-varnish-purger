@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/go-retryablehttp"
 )
 
-const defaultHTTPTimeout = 10
+const defaultHTTPTimeout = 3 * time.Second
 
 // Invalidator is the API to varnish
 type Invalidator struct {
@@ -35,7 +35,7 @@ func NewInvalidator(varnishAddress string, port int64, keepAlive bool) (*Invalid
 	}
 
 	invalidator := Invalidator{
-		httpClient: &http.Client{Timeout: time.Second * defaultHTTPTimeout},
+		httpClient: &http.Client{Timeout: defaultHTTPTimeout},
 		hostname:   addr.Hostname(),
 		port:       port,
 		protocol:   addr.Scheme,
@@ -45,13 +45,19 @@ func NewInvalidator(varnishAddress string, port int64, keepAlive bool) (*Invalid
 	return &invalidator, nil
 }
 
+// SetHttpTimeout can be used to set a custom http timeout
+func (i *Invalidator) SetHttpTimeout(httpTimeout time.Duration) {
+	i.httpClient.Timeout = httpTimeout
+}
+
 // SetRetryConfig can be used to inject a retry configuration to the http client
 // The retry policy is exponential backoff
-func (i *Invalidator) SetRetryConfig(retryWaitMin time.Duration, retryMax int) {
+func (i *Invalidator) SetRetryConfig(retryWaitMin, retryWaitMax time.Duration, retryMax int) {
 	retryClient := retryablehttp.NewClient()
-	retryClient.HTTPClient.Timeout = defaultHTTPTimeout * time.Second
+	retryClient.HTTPClient.Timeout = i.httpClient.Timeout
 
 	retryClient.RetryWaitMin = retryWaitMin
+	retryClient.RetryWaitMax = retryWaitMax
 	retryClient.RetryMax = retryMax
 
 	i.httpClient = retryClient.StandardClient()

@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// Invalidatepath sends purge request to the path and return the status code
+// InvalidatePath sends purge request to the path and return the status code
 func (i Invalidator) InvalidatePath(targetPath string) error {
 	req, err := http.NewRequest("PURGE", i.buildFullPath(targetPath), nil)
 	if err != nil {
