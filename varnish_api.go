@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/go-retryablehttp"
 )
 
-const defaultHTTPTimeout = 3 * time.Second
+const defaultHTTPTimeout = 10 * time.Second
 
 // Invalidator is the API to varnish
 type Invalidator struct {
