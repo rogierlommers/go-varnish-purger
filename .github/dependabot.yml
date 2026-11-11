@@ -2,6 +2,8 @@ version: 2
 updates:
   - package-ecosystem: "gomod"
     directory: "/"
+    assignees:
+      - "rogierlommers"
     schedule:
       interval: "weekly"
     groups:
@@ -10,5 +12,7 @@ updates:
 
   - package-ecosystem: "github-actions"
     directory: "/"
+    assignees:
+      - "rogierlommers"
     schedule:
       interval: "weekly"
